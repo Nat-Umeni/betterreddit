@@ -1,0 +1,31 @@
+.form-container {
+    display: block;
+    margin: 15% auto;
+    width:500px;
+    text-align: center;
+    background-color: #fff;
+    padding: 50px;
+    
+    
+  }
+  
+  h1{
+    color: black;
+  }
+  
+  
+  .form-container input{
+    margin-bottom: 10px;
+  
+  }
+  
+  button{
+    margin-bottom: 20px;
+    margin-top: 20px;
+    padding: 5px;
+    width: 150px;
+  }
+  
+  
+  
+  

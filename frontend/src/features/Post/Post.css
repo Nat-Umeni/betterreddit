@@ -1,9 +1,15 @@
+article{
+  margin-top: 180px;
+}
+
 .post-wrapper {
   display: flex;
+  
 }
 
 .post-container {
   width: 100%;
+  
 }
 
 .post-details {

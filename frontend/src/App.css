@@ -33,9 +33,10 @@
 
 html,
 body {
-  background: var(--color-background);
+  background-color: #444444;
   color: var(--color-text-body);
 }
+
 
 p {
   margin: 0;

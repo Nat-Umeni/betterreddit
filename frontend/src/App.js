@@ -10,9 +10,11 @@ export default function App() {
   return (
     <>
       <Header />
+
       <main>
         <Home />
       </main>
+
       <aside>
         <Subreddits />
       </aside>

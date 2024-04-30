@@ -7,12 +7,17 @@ import App from './App';
 import Login from './components/Login/Login';
 import store from './store';
 import reportWebVitals from './reportWebVitals';
+import SignUp from './components/SignUp/SignUp';
+import Failure from "./components/Failure/Failure"
 
 
 const router = createBrowserRouter(createRoutesFromElements(
   <>
-    <Route path='/login' element={<Login />} />
     <Route path="/" element={<App />} />
+    <Route path='/login' element={<Login />} />
+    <Route path='/sign-up' element={<SignUp />} />
+    <Route path='/failure' element={<Failure />} />
+    
   </>  
 ));
 

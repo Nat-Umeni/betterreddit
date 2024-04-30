@@ -1,0 +1,35 @@
+#root {
+  display: flex;
+  height: auto;
+  width: 600px;
+  text-align: center;
+  background-color: #fff;
+  justify-content: center;
+  align-content: center;
+  margin: 15% auto;
+  border-radius: 10px;
+  padding: 50px;
+}
+  
+  
+    
+    h1{
+      color: black;
+    }
+    
+    
+    .form-container input{
+      margin-bottom: 10px;
+    
+    }
+    
+    button{
+      margin-bottom: 20px;
+      margin-top: 20px;
+      padding: 5px;
+      width: 150px;
+    }
+    
+    
+    
+    

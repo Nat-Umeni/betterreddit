@@ -1,6 +1,7 @@
 import React, { useState } from "react";
-import { Link } from "react-router-dom";
+import { Link, Navigate } from "react-router-dom";
 import "./Login.css"
+
 
 export default function Login(){
 
@@ -17,14 +18,22 @@ export default function Login(){
             password: password
         };
 
-        const response = await fetch("http://localhost:5000/login", {
+        try{
+            const response = await fetch("http://localhost:3001/login", {
             method: "post",
             headers: {"Content-Type": "application/json"},
             body: JSON.stringify(userData)
-        });
+        })
 
-        const data = response.json();
-        console.log(data);
+        if(response.ok){
+            
+        }
+
+        
+    
+        } catch(err){
+            console.log(err)
+        }        
     }
 
 
@@ -36,11 +45,19 @@ export default function Login(){
                 <form onSubmit={handleForm}>
                     
                     <h1> Login Here!</h1>
+                    
+                    <label for="username"> Username: </label>
                     <input className="usernameBox" type="text" name="username" placeholder="Username" onChange={handleChangeUsername}/>
+
                     <br />
+
+                    <label for="password"> Password: </label>
                     <input className="passwordBox" type="password" name="password" placeholder="Password" onChange={handleChangePassword}/>
+
                     <br />
+
                     <button type="submit" value="Login">Login</button>
+                    
                     <br />
     
                     <Link to='/sign-up'>Don't have an account yet? Sign Up Here </Link>

@@ -18,20 +18,24 @@ export default function SignUp(){
         let userData = {
             username: username,
             password: password
-        };
-
+        }
         /*Using this to check if the form button and handleForm funtion was working */
 
         console.log("clicked");
-        const response = await fetch("http://localhost:5000/sign-up", {
+
+        try {
+            const response = await fetch("http://localhost:3001/sign-up", {
             method: "post",
             headers: {"Content-Type": "application/json"},
             body: JSON.stringify(userData)
         });
 
         const data = response.json();
+        console.log(data);
 
-        
+        } catch(err){
+            console.log(err);
+        }
     }
 
     return (

@@ -1,91 +1,203 @@
-const express = require("express");
+const express = require('express');
 const app = express();
-const passport = require("passport");
-const session = require("express-session");
-const cors = require("cors");
-const LocalStrategy = require("passport-local").Strategy;
-const bodyParser = require("body-parser");
-const { SESSION_SECRET } = require("../config");
+const passport = require('passport');
+const LocalStrategy = require('passport-local').Strategy;
+const session = require('express-session');
+const pgSession = require('connect-pg-simple')(session);
+const bcrypt = require('bcrypt');
+const pg = require('pg');
+const cors = require('cors');
+const bodyParser = require('body-parser');
 const store = new session.MemoryStore();
 
+ 
 
-const PORT = process.env.PORT || "5000"
+// PostgreSQL connection
 
+//change to something real
+const pgPool = new pg.Pool({
+    host: "",
+    user: "",
+    password: "",
+    port: ,
+    database: "",
+  }); 
 
-app.use(passport.initialize());
-app.use(passport.session());
+// Express session
 
-// Set method to serialize data to store in cookie
-passport.serializeUser((user, done) => {
-    done(null, user.id);
-  });
+app.use(session({
 
- // Set method to deserialize data stored in cookie and attach to req.user
- passport.deserializeUser((id, done) => {
-    done(null, { id });
-  });
+    store: new pgSession({
 
-// Creates a session
-app.use(
-    session({  
-      secret: 12345,
-      resave: false,
-      saveUninitialized: false,
-      cookie: {
-        secure: false,
-        maxAge: 24 * 60 * 60 * 1000
-      },
-      store
-    })
-  );
+        pool: pgPool,
 
-  
+        tableName: 'session'
+
+    }),
+
+    secret: 12345, //change to something real
+
+    resave: false,
+
+    saveUninitialized: false,
+
+    cookie: {
+      secure: false,
+      maxAge: 24 * 60 * 60 * 1000
+    },
+    store
+
+}));
 
 app.use(cors());
 app.use(bodyParser.json());
-
 app.set('trust proxy', 1);
 
+ 
 
-passport.use(new LocalStrategy(
-    function (username, password, done){
-        //Looks for the user in the database
-        db.users.findByUsername(username, (err, user) => {
-            //If theres an error return the rerror
-            if (err) return done(err);
+// Passport initialization
 
-            //If the user can't be found, returns nulll and false;
-            if(!user) return done(null, false);
+app.use(passport.initialize());
 
-            //If the user is found, but the password is not valid
-            if(user.password != password) return done(null, false);
+app.use(passport.session());
 
-            //The user is found and the password is valid, return the user.
-            return (null, user);
+ 
+
+// Passport local strategy
+
+passport.use(new LocalStrategy((username, password, done) => {
+
+    pgPool.query('SELECT * FROM users WHERE username = $1', [username], (err, result) => {
+
+        if (err) {
+
+            return done(err);
+
+        }
+
+        if (!result.rows.length) {
+
+            return done(null, false, { message: 'Incorrect username.' });
+
+        }
+
+        const user = result.rows[0];
+
+        bcrypt.compare(password, user.password, (err, isMatch) => {
+
+            if (err) {
+
+                return done(err);
+
+            }
+
+            if (isMatch) {
+
+                return done(null, user);
+
+            } else {
+
+                return done(null, false, { message: 'Incorrect password.' });
+
+            }
+
+        });
+
+    });
+
+}));
+
+ 
+
+// Serialize and deserialize user
+
+passport.serializeUser((user, done) => {
+
+    done(null, user.id);
+
+});
+
+ 
+
+passport.deserializeUser((id, done) => {
+
+    pgPool.query('SELECT * FROM users WHERE id = $1', [id], (err, result) => {
+
+        if (err) {
+
+            return done(err);
+
+        }
+
+        const user = result.rows[0];
+
+        done(null, user);
+
+    });
+
+});
+
+ 
+
+// Routes for authentication
+
+app.post('/login', passport.authenticate('local'), (req, res) => {
+
+    res.json({ message: 'Login successful', user: req.user });
+
+});
+
+ 
+
+
+app.post('/sign-up', async (req, res) => {
+
+    const { username, password } = req.body;
+
+
+
+    console.log("start of bcrpt hash");
+    
+    bcrypt.hash(password, 10,  (err, hash) => {
+
+
+        if (err) {
+
+            return res.status(500).json({ error: err.message });
+
+        }
+
+        pgPool.query('INSERT INTO users (username, password) VALUES ($1, $2)', [username, hash], (err) => {
+
+            if (err) {
+
+                return res.status(500).json({ error: err.message });
+
+            }
+
+            console.log("Sign up complete");
+            res.json({ message: 'Registration successful' });
             
-        })
-    }
-));
 
-app.post("/login", passport.authenticate(LocalStrategy, { failureRedirect: "/login"}), (req, res) => {
-  //If password === database password with hash:
+        });
 
-    //Attaches an authenticated property to the session (wrapped in above if statement)
-    req.session.authenticated = true;
-    //Attaches a user object to the session (wrapped in above if statement)
-    req.session.user = {
-      username,
-      password,
-    }
+    });
 
 });
 
-app.post("/sign-up", (req, res) => {
-    console.log(req.body)
-    //To test if there is even a response, for now and if there is:
-   res.json({"message": "Form submitted"});
-});
+ 
 
-app.listen(PORT, ()=> {
-    console.log(`Now listening on port ${PORT}`)
-})
+app.get('/logout', (req, res) => {
+
+    req.logout();
+
+    res.json({ message: 'Logout successful' });
+
+});
+ 
+
+app.listen(3001, () => {
+
+  console.log('Server is running on port 3001');
+
+});

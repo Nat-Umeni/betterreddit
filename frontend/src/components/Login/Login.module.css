@@ -1,25 +1,30 @@
-
-#root {
+body {
+  height: 100%;
+  width: 100%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+ 
+ .formContainer{
     display: flex;
-    height: auto;
-    width: 600px;
+    height: 100%;
+    width: 700px;
     text-align: center;
-    background-color: #fff;
     justify-content: center;
     align-content: center;
-    margin: 15% auto;
     border-radius: 10px;
-    padding: 50px;
+    padding-left: 85%;
+    padding-top: 40%;
+      
   }
   
-  h1{
-    color: black;
-  }
+ 
   
   
-  .form-container input{
+  .formContainer input{
     margin-bottom: 10px;
-  
+    padding: 6px;  
   }
   
   button{

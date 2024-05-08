@@ -3,7 +3,7 @@ module.exports = {
     PGHOST: process.env.PGHOST,
     PGUSER: process.env.PGUSER,
     PGDATABASE: process.env.PGDATABASE,
-    PGPASSWORD: 'postgres',
+    PGPASSWORD: process.env.PGPASSWORD,
     PGPORT: process.env.PGPORT
   },
  

@@ -19,34 +19,25 @@ const pgPool = new pg.Pool({
     host: "",
     user: "",
     password: "",
-    port: ,
+    port: 1,
     database: "",
   }); 
 
 // Express session
 
 app.use(session({
-
     store: new pgSession({
-
         pool: pgPool,
-
         tableName: 'session'
-
     }),
-
     secret: 12345, //change to something real
-
     resave: false,
-
     saveUninitialized: false,
-
     cookie: {
       secure: false,
       maxAge: 24 * 60 * 60 * 1000
     },
     store
-
 }));
 
 app.use(cors());
@@ -58,7 +49,6 @@ app.set('trust proxy', 1);
 // Passport initialization
 
 app.use(passport.initialize());
-
 app.use(passport.session());
 
  
@@ -142,7 +132,6 @@ passport.deserializeUser((id, done) => {
 // Routes for authentication
 
 app.post('/login', passport.authenticate('local'), (req, res) => {
-
     res.json({ message: 'Login successful', user: req.user });
 
 });
@@ -150,16 +139,27 @@ app.post('/login', passport.authenticate('local'), (req, res) => {
  
 
 
-app.post('/sign-up', async (req, res) => {
+app.post('/sign-up', (req, res) => {
 
     const { username, password } = req.body;
 
+    console.log("Checking if user exists");
 
+    pgPool.query('INSERT INTO users (username) VALUES $1', [username], (err) => {
 
-    console.log("start of bcrpt hash");
+        if (err) {
+            console.log("Sign up INCOMPLETE");
+            //this is causing problems
+            res.status(409).send("Username taken");
+                        
+        }     
+
+    });    
+
+    console.log("Start of bcrypt hash");
     
     bcrypt.hash(password, 10,  (err, hash) => {
-
+        
 
         if (err) {
 
@@ -171,7 +171,7 @@ app.post('/sign-up', async (req, res) => {
 
             if (err) {
 
-                return res.status(500).json({ error: err.message });
+                return res.status(409).json({ err: "Username Taken" });
 
             }
 

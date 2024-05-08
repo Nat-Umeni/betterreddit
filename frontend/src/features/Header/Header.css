@@ -12,10 +12,6 @@ header {
   box-shadow: var(--box-shadow);
   height: 64px;
   padding: 0 var(--spacing-5);
-  display: flex;
-  justify-content: space-around;
-  position: fixed;
-  width: 100%;
 }
 
 header .logo-icon {
@@ -49,6 +45,7 @@ header span {
   color: var(--color-text-secondary);
   font-size: 1.5rem;
 }
+
 
 #Link{
   display: inline;

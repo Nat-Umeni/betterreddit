@@ -1,6 +1,6 @@
 import React, { useState } from "react";
 import { Link } from "react-router-dom";
-import "./SignUp.css";
+import styles from "./SignUp.module.css";
 
 
 
@@ -40,30 +40,36 @@ export default function SignUp(){
 
     return (
 
-    <div class="form-container">
+    <div className={styles.formContainer}>
 
             <form onSubmit={handleForm} >
 
                 <h1>Sign Up Below</h1>
-                <label for="username"> Username: </label>
+                <label htmlFor="username"> Username: </label>
                 <input type="text" name="username" placeholder="Username" onChange={handleChangeUsername}/>
 
                 <br />
 
-                <label for="password"> Password: </label>
+                <label htmlFor="password" aria-required> Password: </label>
                 <input type="password" name="password" placeholder="Password" onChange={handleChangePassword}/>
 
                 <br />
 
-                <label for="Repeated Password"> Repeat Password: </label>
+                <label htmlFor="Repeated Password"> Repeat Password: </label>
                 <input type="password" name="Repeated Password" placeholder="Repeat Password"/>
 
                 <br />
 
                 <input type="submit" value="Create Account"/>
+                <br />
+
+                <span id="errorPara"></span>
+                <br />
+
+                <Link to='/login'>Already have an account? Log in here!</Link>
 
                 <br />
-                <Link to='/login'>Already have an account? Log in here!</Link>
+                <Link id="homepage" to='/'>Or go back to homepage, without signing in</Link>
 
             </form>
 

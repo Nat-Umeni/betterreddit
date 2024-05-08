@@ -26,18 +26,22 @@
   --spacing-3: 24px;
   --spacing-4: 36px;
   --spacing-5: 64px;
-
   --radius: 4px;
   --radius-2: 8px;
 }
 
 html,
 body {
-  background-color: #444444;
+  
   color: var(--color-text-body);
-}
 
+}
 
 p {
   margin: 0;
+}
+
+main{
+  width: 100%;
+  
 }

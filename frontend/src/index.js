@@ -13,6 +13,7 @@ import Failure from "./components/Failure/Failure"
 
 const router = createBrowserRouter(createRoutesFromElements(
   <>
+  
     <Route path="/" element={<App />} />
     <Route path='/login' element={<Login />} />
     <Route path='/sign-up' element={<SignUp />} />

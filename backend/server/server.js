@@ -19,7 +19,7 @@ const pgPool = new pg.Pool({
     host: "",
     user: "",
     password: "",
-    port: 1,
+    port: "",
     database: "",
   }); 
 
@@ -132,7 +132,11 @@ passport.deserializeUser((id, done) => {
 // Routes for authentication
 
 app.post('/login', passport.authenticate('local'), (req, res) => {
-    res.json({ message: 'Login successful', user: req.user });
+    
+    req.session.authenticated = true;
+
+    res.json({ message: 'Login successful', user: req.username });
+
 
 });
 
@@ -142,19 +146,7 @@ app.post('/login', passport.authenticate('local'), (req, res) => {
 app.post('/sign-up', (req, res) => {
 
     const { username, password } = req.body;
-
-    console.log("Checking if user exists");
-
-    pgPool.query('INSERT INTO users (username) VALUES $1', [username], (err) => {
-
-        if (err) {
-            console.log("Sign up INCOMPLETE");
-            //this is causing problems
-            res.status(409).send("Username taken");
-                        
-        }     
-
-    });    
+ 
 
     console.log("Start of bcrypt hash");
     
@@ -163,11 +155,11 @@ app.post('/sign-up', (req, res) => {
 
         if (err) {
 
-            return res.status(500).json({ error: err.message });
+            return res.status(500).json({ error: err });
 
         }
 
-        pgPool.query('INSERT INTO users (username, password) VALUES ($1, $2)', [username, hash], (err) => {
+    pgPool.query('INSERT INTO users (username, password) VALUES ($1, $2)', [username, hash], (err) => {
 
             if (err) {
 
@@ -176,12 +168,21 @@ app.post('/sign-up', (req, res) => {
             }
 
             console.log("Sign up complete");
-            res.json({ message: 'Registration successful' });
+            res.send({ message: 'Registration successful', user: username });
             
 
         });
 
     });
+
+});
+
+app.get('/profile', (req, res) => {
+    
+ const user = req.session.user;
+ console.log(user)
+
+    res.status(200).json({currentUser: user});
 
 });
 

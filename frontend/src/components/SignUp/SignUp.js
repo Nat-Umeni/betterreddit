@@ -13,6 +13,8 @@ export default function SignUp(){
     const handleChangeUsername = e => setUsername(e.target.value);
     const handleChangePassword = e => setPassword(e.target.value);
 
+    
+
     const handleForm = async (e) => {
         e.preventDefault();
         let userData = {
@@ -31,6 +33,11 @@ export default function SignUp(){
         });
 
         const data = response.json();
+        
+
+        setUsername('');
+        setPassword('');
+
         console.log(data);
 
         } catch(err){
@@ -63,7 +70,7 @@ export default function SignUp(){
                 <input type="submit" value="Create Account"/>
                 <br />
 
-                <span id="errorPara"></span>
+                <span id="hiddenPara">{}</span>
                 <br />
 
                 <Link to='/login'>Already have an account? Log in here!</Link>

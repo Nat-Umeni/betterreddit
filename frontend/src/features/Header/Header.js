@@ -6,7 +6,8 @@ import { useDispatch, useSelector } from 'react-redux';
 import { setSearchTerm } from '../../store/redditSlice';
 import { Link } from 'react-router-dom';
 
-const Header = () => {
+
+const Header = (props) => {
   const [searchTermLocal, setSearchTermLocal] = useState('');
   const searchTerm = useSelector((state) => state.reddit.searchTerm);
   const dispatch = useDispatch();
@@ -24,7 +25,7 @@ const Header = () => {
     dispatch(setSearchTerm(searchTermLocal));
   };
 //FaReddit gives the blue reddit Icon rather than loading it straight up.
-//HiOutlineSearch is a search image component for the same reason as above
+//HiOutlineSearch is a search image component for the same reason as above, will change to font awesome later
   return (
     <header>
       <div className="logo">
@@ -46,6 +47,7 @@ const Header = () => {
           <HiOutlineSearch />
         </button>
         <Link id="Link" to="/login">Login in here</Link>
+        <span>{props.currentUser ? props.currentUser : ''}</span>
 
       </form>
     </header>
